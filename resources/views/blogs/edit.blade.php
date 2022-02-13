@@ -18,7 +18,6 @@
                         {{Form::select('category_id' , $categories, $blog->category->category_id, ['class' => 'form-control ','placeholder' => $blog->category->category_name])}}
                         
                     </div>
-                    {{$selectedTags}}
                     <div class="form-group">
                         {{Form::label('tag', 'Tag')}}
                         {{Form::select('tag_ids[]', $tags, null, ['class' => 'js-example-basic-multiple form-control ', 'multiple' => 'multiple'])}}

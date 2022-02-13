@@ -122,14 +122,11 @@ class BlogsController extends Controller
         
         $categories = Category::pluck('category_name','category_id');
         $tags = Tag::pluck('tag_name','tag_id');
-        $blogTag = BlogTag::where(['blog_id' => $blog_id])->get();
-        $tagId = $blogTag->tag_id;
-        $selectedTags = Tag::where('tag_id', $tagId)->get();
         $blog = Blog::find($blog_id);
         if(auth()->user()->id !== $blog->user_id){
             return redirect('/blogs')->with('error','Unautherized Page!');
         }
-        return view('blogs.edit',compact('categories','blog','tags','selectedTags'));
+        return view('blogs.edit',compact('categories','blog','tags'));
     }
 
     /**

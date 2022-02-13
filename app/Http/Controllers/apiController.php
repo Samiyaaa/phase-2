@@ -36,10 +36,8 @@ class apiController extends Controller
     }
 
     public function blogShowTag($id){
-        $blog =Blog::find($id);
-        foreach($blog->blogTag as $blogTag){
-             return Tag::find($blogTag->tag->tag_id);
-        }
+        $tagIds = BlogTag::where('blog_id', $id)->pluck('tag_id');
+        return Tag::whereIn('tag_id', $tagIds)->get();
     }
 
     public function blogSearch($title){
@@ -75,8 +73,7 @@ class apiController extends Controller
     }
 
     public function tagShowBlog($id){
-        $blogTag = BlogTag::where(['tag_id' =>$id])->get();
-        $blog = $blogTag->blog_id;
-        return Blog::where(['blog_id' => $blog])->get();
+        $blogIds = BlogTag::where('tag_id', $id)->pluck('blog_id');
+        return Blog::whereIn('blog_id', $blogIds)->get();
     }
 }

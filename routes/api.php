@@ -35,8 +35,7 @@ Route::get('/blogs', [apiController::class,'blogIndex']);
 Route::get('/blogs/{id}', [apiController::class,'blogShow']);
 Route::get('/blogs/search/{title}', [apiController::class,'blogSearch']);
 Route::get('/blogs/{id}/category', [apiController::class,'blogShowCategory']);
-//not working
-Route::get('/blogs/{id}/tag', [apiController::class,'blogShowTag']);
+Route::get('/blogs/{id}/tags', [apiController::class,'blogShowTag']);
 
 //category routes
 Route::get('/categories',[apiController::class,'categoryIndex']);
@@ -48,5 +47,4 @@ Route::get('/categories/{id}/blogs', [apiController::class,'categoryShowBlog']);
 Route::get('/tags',[apiController::class,'tagIndex']);
 Route::get('/tags/{id}', [apiController::class,'tagShow']);
 Route::get('/tags/search/{tag_name}', [apiController::class,'tagSearch']);
-//not working
 Route::get('/tags/{id}/blogs', [apiController::class,'tagShowBlog']);
