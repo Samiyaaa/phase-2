@@ -12,6 +12,17 @@ class apiController extends Controller
 {
     public function blogIndex(){
         return Blog::all();
+    //     foreach(Blog::all() as $blogs){
+    //     $response = [
+    //         'Blog_id' => $blogs->blog_id,
+    //         'Title' => $blogs->title,
+    //         'Category_id'  => $blogs->category_id,
+    //         'Content' => $blogs->content,
+    //         'user_id' => $blogs->user_id,
+    //         'Blog_image' =>  asset('storage/blog_images/' . $blogs->blog_image),
+    //     ];
+    //     return response($response);
+    // }
     }
 
     public function blogStore(Request $request){
@@ -26,7 +37,15 @@ class apiController extends Controller
     }
 
     public function blogShow($id){
-        return Blog::find($id);
+        $blog = Blog::find($id);
+        return [
+            'Blog_id' => $blog->blog_id,
+            'Title' => $blog->title,
+            'Category_id'  => $blog->category_id,
+            'Content' => $blog->content,
+            'user_id' => $blog->user_id,
+            'Blog_image' =>  asset('storage/blog_images/' . $blog->blog_image),
+        ];
     }
 
     public function blogShowCategory($id){

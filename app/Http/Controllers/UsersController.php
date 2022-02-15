@@ -121,25 +121,20 @@ class UsersController extends Controller
          $user->email = $request->input('email');
          $user->save();
 
-         // Get role id
-         $inputRoleId = $request->input('role_ids');
-
-         // Check if user has role
-         $userRole = RoleUser::where([
-             'role_id' => $inputRoleId,
-             'user_id' => $user->id
-         ])->first();
-
-         if($userRole == null){
-             // delete prev role
-             $prevUserRole = RoleUser::where('user_id', $user->id)->first();
-             $prevUserRole->delete();
-
-             $newUserRole = new RoleUser;
-             $newUserRole->user_id = $user->id;
-             $newUserRole->role_id = $inputRoleId;
-             $newUserRole->save();
-         }
+        $prevUserRoles = RoleUser::where('user_id', $user->id)->get();
+        foreach($prevUserRoles as $prevUserRole){
+            if($prevUserRole != null){
+                $prevUserRole->delete();
+            }
+        }
+        if($request->input('role_ids') != null){
+            foreach($request->input('role_ids') as $role_id){
+                $newUserRole = new RoleUser;
+                $newUserRole->user_id = $user->id;
+                $newUserRole->role_id = $role_id;
+                $newUserRole->save();
+            }        
+        }
  
          return redirect('/users')->with('success', 'User record updated');
     }

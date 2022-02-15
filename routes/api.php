@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\apiController;
+use App\Http\Controllers\applicationAPIsController;
+use App\Http\Controllers\jobAPIsController;
 use App\Http\Controllers\authController;
 use App\Models\Category;
 /*
@@ -22,6 +24,11 @@ use App\Models\Category;
 
 Route::group(['middleware'=>['auth:sanctum']],function() {
     Route::post('/blogs', [apiController::class,'blogStore']);
+    Route::post('/jobs',[jobAPIsController::class,'jobStore']);
+    Route::put('/jobs/{id}',[jobAPIsController::class,'jobUpdate']);
+    Route::delete('/jobs/{id}',[jobAPIsController::class,'jobDestroy']);
+    Route::post('/applications',[applicationAPIsController::class,'applicationStore']);
+    Route::delete('/applications/{id}',[applicationAPIsController::class,'applicationDestroy']);
     Route::post('/logout', [authController::class,'logout']);
 });
 
@@ -48,3 +55,14 @@ Route::get('/tags',[apiController::class,'tagIndex']);
 Route::get('/tags/{id}', [apiController::class,'tagShow']);
 Route::get('/tags/search/{tag_name}', [apiController::class,'tagSearch']);
 Route::get('/tags/{id}/blogs', [apiController::class,'tagShowBlog']);
+
+//job routes
+Route::get('/jobs',[jobAPIsController::class,'jobIndex']);
+Route::get('/jobs/{id}',[jobAPIsController::class,'jobShow']);
+Route::get('/jobs/{id}/applications',[jobAPIsController::class,'jobShowApplications']);
+Route::get('/recruiter/{id}/jobs',[jobAPIsController::class,'userJobs']);
+
+//application routes
+Route::get('/applications',[applicationAPIsController::class,'applicationIndex']);
+Route::get('/applications/{id}',[applicationAPIsController::class,'applicationShow']);
+Route::get('/applicant/{id}/applications',[applicationAPIsController::class,'userApplications']);

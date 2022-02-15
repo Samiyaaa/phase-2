@@ -85,6 +85,7 @@ class BlogsController extends Controller
          $blog->content =  $request->input('content');
          $blog->category_id = $request->input('category_id');
          $blog->blog_image = $filenameToStore;
+        // $blog->blog_image = $path;
          $blog->user_id= auth()->user()->id;
          $blog->save();
          foreach($request->input('tag_ids') as $tag_id){
@@ -156,7 +157,8 @@ class BlogsController extends Controller
             'title'  => 'required',
             'content' => 'required',
             'blog_image' => 'image|nullable|max:1999',
-            'category_id' => 'required' 
+            'category_id' => 'required',
+            'tag_ids' => 'nullable'
          ]);
          
          $blog = Blog::find($blog_id);
@@ -168,26 +170,20 @@ class BlogsController extends Controller
          }
          $blog->save();
 
-         // Get role id
-         $inputTagId = $request->input('tag_ids');
-
-         // Check if blog has tag
-         $blogTag = BlogTag::where([
-             'tag_id' => $inputTagId,
-             'blog_id' => $blog->blog_id
-         ])->first();
-
-         if($blogTag == null){
-             // delete prev tag
-             $prevBlogTag = BlogTag::where('blog_id', $blog->blog_id)->first();
-             $prevBlogTag->delete();
-
-             $newBlogTag = new BlogTag;
-             $newBlogTag->blog_id = $blog->blog_id;
-             $newBlogTag->tag_id = $inputTagId;
-             $newBlogTag->save();
-         }
- 
+        $prevBlogTags = BlogTag::where('blog_id', $blog->blog_id)->get();
+        foreach($prevBlogTags as $prevBlogTag){
+            if($prevBlogTag != null){
+                $prevBlogTag->delete();
+            }
+        }
+        if($request->input('tag_ids') != null){
+        foreach($request->input('tag_ids') as $tag_id){
+            $newBlogTag = new BlogTag;
+            $newBlogTag->blog_id = $blog->blog_id;
+            $newBlogTag->tag_id = $tag_id;
+            $newBlogTag->save();
+        }
+        }
          return redirect('/blogs')->with('success', 'Blog updated');
     }
 
