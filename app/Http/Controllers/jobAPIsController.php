@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Job;
 use App\Models\Application;
+use App\Models\RoleUser;
+use App\Models\User;
 
 class jobAPIsController extends Controller
 {
@@ -17,6 +19,8 @@ class jobAPIsController extends Controller
             'title'  => 'required',
             'job_desc' => 'required'
          ]);
+
+        //  return response()->json([auth()->user()->hasRole('Job Recruiter'), auth()->user()->roleUser()->get()], 200);
         
         $job = new Job;
         $job->title = $request->input('title');
@@ -27,14 +31,22 @@ class jobAPIsController extends Controller
             ['job_desc','=',  $request->input('job_desc')],
             ['user_id','=',  auth()->user()->id]
             ])->first();
+            // $user_id = auth()->user()->id;
+            // $checkRole = RoleUser::where('user_id',$user_id)->first();
+            if(auth()->user()->hasRole('Job Recruiter')){
+                if($checkJob === null){
+                    $job->save(); 
+                }
+                else{
+                    return ('Job Already Exist');
+                } 
+            }
+            else{
+            return response([
+                    'message' => 'You have to login as job recruiter!'
+                ],401); 
+            }
         
-        if($checkJob === null){
-        $job->save();  
-        }
-        else{
-            return ('Job Already Exist');
-        }
-       
         $newJob = Job::where('job_id',$job->job_id)->first();
         $response = [
             'Title' => $newJob->title,

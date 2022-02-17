@@ -26,18 +26,25 @@ class applicationAPIsController extends Controller
             ['user_id','=',  auth()->user()->id]
             ])->first();
         $checkJob = Job::where('job_id',$request->input('job_id'))->first();
-        if($checkApplication === null){
-            if($checkJob !== null){
-               $application->save(); 
+        if(auth()->user()->hasRole('Job Seeker')){
+            if($checkApplication === null){
+                if($checkJob !== null){
+                $application->save(); 
+                }
+                else{
+                    return ('The job doesn`t exist');
+                } 
             }
             else{
-                return ('The job doesn`t exist');
-            } 
+                return ('Application Already Exist');
+            }
+       }
+       else{
+        return response([
+                'message' => 'You have to login as job seeker!'
+            ],401); 
         }
-        else{
-            return ('Application Already Exist');
-        }
-
+    
         $newApplication = Application::where('job_id',$application->job_id)->first();
         $response = [
             'Job_id'  => $newApplication->job_id,

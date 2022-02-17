@@ -7,11 +7,12 @@ use App\Models\Blog;
 use App\Models\BlogTag;
 use App\Models\Category;
 use App\Models\Tag;
+use App\Http\Resources\BlogCollection;
 
 class apiController extends Controller
 {
     public function blogIndex(){
-        return Blog::all();
+        // return Blog::all();
     //     foreach(Blog::all() as $blogs){
     //     $response = [
     //         'Blog_id' => $blogs->blog_id,
@@ -23,6 +24,8 @@ class apiController extends Controller
     //     ];
     //     return response($response);
     // }
+
+        return response()->json(BlogCollection::collection(Blog::all()), 200);
     }
 
     public function blogStore(Request $request){
