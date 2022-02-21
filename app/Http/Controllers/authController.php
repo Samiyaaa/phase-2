@@ -60,9 +60,22 @@ class authController extends Controller
     }
 
     $token = $user->createToken('mytoken')->plainTextToken;
-
+    $userRoles = RoleUser::where('user_id',$user->id)->get();
+    foreach($userRoles as $userRole){
+        $role_id = $userRole->role_id;
+        $roles = Role::where('role_id',$role_id)->get();
+        foreach($roles as $role){
+            $role_name = $role->role_name;
+        }
+    }
+    // foreach($roles as $role){
+    //     $roleName=[
+    //     'role' => $role->role_name
+    // ];
+    // 
     $response = [
         'user' => $user,
+        'role' => $role_name,
         'token' => $token
     ];
 
